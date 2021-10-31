@@ -1,48 +1,30 @@
+/*************** Require ****************/
 const express = require("express");
 const app = express();
-require("./modules/server-init")(app, 3500);
 
+/************* Server Init **************/
+require("./modules/server-init")(app, 3000);
+
+/************* Router Init **************/
+const authRouter = require("./routes/auth-router");
+const userRouter = require("./routes/user-router");
+const boardRouter = require("./routes/board-router");
+const cartRouter = require("./routes/cart-router");
 app.use("/", express.static("./public"));
+app.use("/auth", authRouter);
+app.use("/user", userRouter);
+app.use("/board", boardRouter);
+app.use("/cart", cartRouter);
 
-app.get("/", (req, res) => {
-  res.send("Root");
-});
-
-app.get("/login", (req, res) => {
-  res.send("GET");
-});
-
-app.post("/login", (req, res) => {
-  res.send("POST");
-});
-
-app.get("/posts", (req, res) => {
-  if (req.query.id) {
-    // DB연동
-    res.send(req.query.id + "번 포스트");
-  } else {
-    // DB연동
-    res.send("전체포스트");
-  }
-});
-
-app.get("/blogs", (req, res) => {
-  res.send("전체 블로그");
-});
-
-app.get("/blog/:id", (req, res) => {
-  const id = req.params.id;
-  res.send(id + "번 블로그");
-});
-
-app.use((req, res) => {
-  res.status(404).send("<h1>File Not Found</h1>");
-});
-
-/* app.get()
-app.post()
-app.put()
-app.delete()
-app.use() */
-
-// CRUD
+/* 
+/auth/login(GET)  - 로그인 폼     
+/auth/login(POST) - 로그인     
+/auth/join(GET)   - 회원가입폼
+/auth/join(POST)  - 회원저장
+/user/form(GET)   - 회원수정폼
+/user/form(POST)  - 회원수정
+/board(GET)       - 전체게시글
+/board/1(GET)     - 1번게시글
+/cart             - 전체 장바구니 
+/cart/5           - 장바구니에 담긴 5번 상품 
+*/
