@@ -16,6 +16,25 @@ app.post("/login", (req, res) => {
   res.send("POST");
 });
 
+app.get("/posts", (req, res) => {
+  if (req.query.id) {
+    // DB연동
+    res.send(req.query.id + "번 포스트");
+  } else {
+    // DB연동
+    res.send("전체포스트");
+  }
+});
+
+app.get("/blogs", (req, res) => {
+  res.send("전체 블로그");
+});
+
+app.get("/blog/:id", (req, res) => {
+  const id = req.params.id;
+  res.send(id + "번 블로그");
+});
+
 app.use((req, res) => {
   res.status(404).send("<h1>File Not Found</h1>");
 });
