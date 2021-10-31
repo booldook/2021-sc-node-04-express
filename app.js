@@ -4,7 +4,9 @@ const app = express();
 const port = 3000;
 app.listen(port, () => console.log(`http://127.0.0.1:${port}`));
 
-app.get("/", (req, res) => {
+app.use("/", express.static("./public"));
+
+app.get("/hello", (req, res) => {
   // const name = req.query.name;
   const { name } = req.query;
   res.status(200).send(`
