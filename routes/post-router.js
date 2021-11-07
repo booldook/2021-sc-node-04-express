@@ -17,12 +17,13 @@ router.get("/", async (req, res) => {
     const page = Number(req.query.page || 1);
     const { data: _lists } = await axios.get(listURL);
     const { data: _users } = await axios.get(userURL);
-    const lists = _lists.filter((v, i) => (page - 1) * 10 <= i && (page - 1) * 10 + 10 > i);
+    const pageCount = Math.ceil(_lists.length / 8);
+    const lists = _lists.filter((v, i) => (page - 1) * 8 <= i && (page - 1) * 8 + 8 > i);
     for (let list of _lists) {
       let [{ name }] = _users.filter((v) => v.id === list.userId);
       list.username = name;
     }
-    res.render("post/list", { lists });
+    res.render("post/list", { lists, pageCount });
   } catch (err) {
     console.log(err);
   }

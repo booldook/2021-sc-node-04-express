@@ -14,3 +14,7 @@ div.container.my-4
           td= list.username
           td.text-start= list.title
           td.text-start= list.body
+  .text-center
+    - for(let i=1; i<=pageCount; i++) {
+      a.pager.p-2(href=`/post?page=${i}`)= i
+    - }
