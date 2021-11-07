@@ -2,6 +2,11 @@
 const express = require("express");
 const app = express();
 
+/************** view Init ***************/
+// app.set("view", "ejs")
+app.set("view engine", "pug");
+app.set("views", "./views-pug");
+
 /************* Server Init **************/
 require("./modules/server-init")(app, 3000);
 
@@ -10,7 +15,11 @@ const authRouter = require("./routes/auth-router");
 const userRouter = require("./routes/user-router");
 const boardRouter = require("./routes/board-router");
 const cartRouter = require("./routes/cart-router");
+const pugRouter = require("./routes/pug-router");
+const ejsRouter = require("./routes/ejs-router");
 app.use("/", express.static("./public"));
+app.use("/pug", pugRouter);
+app.use("/ejs", ejsRouter);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/board", boardRouter);
