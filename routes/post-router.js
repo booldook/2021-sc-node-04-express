@@ -7,9 +7,16 @@
 
 const express = require("express");
 const router = express.Router();
+const axios = require("axios");
 
-router.get("/", (req, res) => {
-  res.send("모든 게시글");
+router.get("/", async (req, res) => {
+  try {
+    const listURL = "https://jsonplaceholder.typicode.com/posts";
+    const { data: lists } = await axios.get(listURL);
+    res.render("post/list", { lists });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 router.get("/:id", (req, res) => {
