@@ -9,21 +9,18 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 
+const listURL = "https://jsonplaceholder.typicode.com/posts";
+const userURL = "https://jsonplaceholder.typicode.com/users";
+
 router.get("/", async (req, res) => {
   try {
     const page = Number(req.query.page || 1);
-    const listURL = "https://jsonplaceholder.typicode.com/posts";
-    const userURL = "https://jsonplaceholder.typicode.com/users";
     const { data } = await axios.get(listURL);
-    const datas = data;
-    datas.forEach(async (v, i) => {
-      const { data } = await axios.get(userURL + "/" + v.userId);
-      v.username = data.name;
-    });
-    const startIdx = (page - 1) * 10;
-    const lists = datas.filter(
-      (list, idx) => startIdx <= idx && startIdx + 10 > idx
-    );
+    const lists = data.filter((v, i) => (page - 1) * 10 <= i && (page - 1) * 10 + 10 > i);
+    for (let list of lists) {
+      let { data: user } = await axios.get(userURL + "/" + list.userId);
+      list.username = user.name;
+    }
     res.render("post/list", { lists });
   } catch (err) {
     console.log(err);
