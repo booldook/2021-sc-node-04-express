@@ -6,6 +6,9 @@ const app = express();
 // app.set("view", "ejs")
 app.set("view engine", "pug");
 app.set("views", "./views-pug");
+// app.locals: view template 이 접근 가능한 전역변수객체
+app.locals.pretty = true;
+app.locals.headTitle = "Hello express";
 
 /************* Server Init **************/
 require("./modules/server-init")(app, 3000);
