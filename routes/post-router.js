@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
       let [{ name }] = _users.filter((v) => v.id === list.userId);
       list.username = name;
     }
-    res.render("post/list", { lists, pageCount });
+    res.render("post/list", { lists, pageCount, pagerPath: "post" });
   } catch (err) {
     console.log(err);
   }

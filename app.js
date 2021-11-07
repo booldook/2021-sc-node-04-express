@@ -13,6 +13,8 @@ app.locals.headTitle = "Express Twitter";
 
 /********* Router Init *********/
 const postRouter = require("./routes/post-router");
+const userRouter = require("./routes/user-router");
 
 app.use("/", express.static("./public"));
 app.use("/post", postRouter);
+app.use("/user", userRouter);

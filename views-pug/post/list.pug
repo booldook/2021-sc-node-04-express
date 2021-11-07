@@ -1,6 +1,5 @@
-include ../inc/head.pug
-include ../inc/nav.pug
-div.container.my-4
+extends ../layout/list-layout.pug
+block content
   table.table.table-dark.text-center
     thead 
       tr 
@@ -15,4 +14,3 @@ div.container.my-4
           td= list.username
           td.text-start= list.title
           td.text-start= list.body
-  include ../inc/pager.pug
