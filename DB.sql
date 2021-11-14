@@ -20,7 +20,9 @@ VALUES
 ('테스트2', '테스터', '내용2 입니다.');
 
 -- DELETE
-DELETE FROM board WHERE id='1';
+DELETE FROM board WHERE id='5';
+
+
 
 
 
