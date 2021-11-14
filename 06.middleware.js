@@ -1,6 +1,9 @@
 /******** Global require *******/
 const express = require("express");
 const createError = require("http-errors");
+const test = require("./middlewares/test-mw");
+const test2 = require("./middlewares/test2-mw");
+const test3 = require("./middlewares/test3-mw");
 const app = express();
 
 /********* Server Init *********/
@@ -13,17 +16,14 @@ app.locals.pretty = true;
 app.locals.headTitle = "Express Twitter";
 
 /******* MiddleWare Init *******/
-app.use((req, res, next) => {
-  req.user = {};
-  req.user.name = "booldook";
-  next();
-});
+// app.use(test);
+app.use(test("booldook"));
 
 /********* Router Init *********/
 app.use("/", express.static("./public"));
-app.get("/board", (req, res, next) => {
+app.get("/board", test2, test3("third"), (req, res, next) => {
   try {
-    res.sen(req.user.name + " HERE");
+    res.send(req.user.name + " HERE");
   } catch (err) {
     next(createError(401));
   }

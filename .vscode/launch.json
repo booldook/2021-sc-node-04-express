@@ -11,7 +11,7 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "name": "nodemon",
-      "program": "${workspaceFolder}/06.middleware.js",
+      "program": "${workspaceFolder}/app.js",
       "request": "launch",
       "restart": true,
       "runtimeExecutable": "nodemon",
