@@ -1,8 +1,7 @@
-const express = require("express");
-const router = express.Router();
-
-router.use((err, req, res, next) => {
-  res.send(err);
-});
-
-module.exports = router;
+module.exports = (err, req, res, next) => {
+  res.render("error/error", {
+    status: err.code,
+    message: err.message,
+    description: null, // SQL에러
+  });
+};
