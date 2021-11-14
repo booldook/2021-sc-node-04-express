@@ -1,5 +1,4 @@
 /******** Global require *******/
-const path = require("path");
 const express = require("express");
 const logger = require("./middlewares/logger-mw");
 const app = express();

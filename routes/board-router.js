@@ -17,14 +17,65 @@ Semantic
 */
 
 const express = require("express");
+const createError = require("http-errors");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.render("board/list");
+// list
+router.get("/", async (req, res, next) => {
+  try {
+    const { page = 1, type } = req.query;
+    if (type === "create") next();
+    else {
+      res.render("board/list");
+    }
+  } catch (err) {
+    next(createError(err));
+  }
 });
 
-router.get("/:id", (req, res) => {
-  res.send("<h1>" + req.params.id + " POST</h1>");
+// create
+router.get("/", async (req, res, next) => {
+  try {
+    res.render("board/form.ejs");
+  } catch (err) {
+    next(createError(err));
+  }
+});
+
+// save
+router.post("/", async (req, res, next) => {
+  try {
+    res.send("전송됨");
+  } catch (err) {
+    next(createError(err));
+  }
+});
+
+// list
+router.get("/", async (req, res, next) => {
+  try {
+    res.render("board/list");
+  } catch (err) {
+    next(createError(err));
+  }
+});
+
+// list
+router.get("/", async (req, res, next) => {
+  try {
+    res.render("board/list");
+  } catch (err) {
+    next(createError(err));
+  }
+});
+
+// list
+router.get("/", async (req, res, next) => {
+  try {
+    res.render("board/list");
+  } catch (err) {
+    next(createError(err));
+  }
 });
 
 module.exports = router;
