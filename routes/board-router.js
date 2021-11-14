@@ -18,15 +18,8 @@ Semantic
 
 const express = require("express");
 const createError = require("http-errors");
-const mysql = require("mysql2");
+const { pool } = require("../modules/mysql-init");
 const router = express.Router();
-
-const connection = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "booldook",
-  password: "000000",
-  database: "booldook",
-});
 
 // list
 router.get("/", async (req, res, next) => {
@@ -54,14 +47,9 @@ router.get("/", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const { title, writer, content } = req.body;
-    connection.query(
-      `INSERT INTO board SET 
-        title='${title}', writer='${writer}', content='${content}'`,
-      function (err, results, fields) {
-        console.log(results);
-      }
-    );
-    res.send("전송됨");
+    let sql = "INSERT INTO board SET title=?, writer=?, content=?";
+    const [rs] = await pool.execute(sql, [title, writer, content]);
+    res.json(rs);
   } catch (err) {
     next(createError(err));
   }
