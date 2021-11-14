@@ -7,12 +7,12 @@ require("./modules/server-init")(app, 3000);
 
 /********* Views Init **********/
 app.set("view engine", "ejs");
-app.set("views", "./views");
+app.set("views", "./views-ejs");
 app.locals.pretty = true;
 app.locals.headTitle = "Express Twitter";
 
 /********* Router Init *********/
-const boardRouter = require("./routes/board-router");
+const commentRouter = require("./routes/comment-router");
 
 app.use("/", express.static("./public"));
-app.use("/board", boardRouter);
+app.use("/comment", commentRouter);
