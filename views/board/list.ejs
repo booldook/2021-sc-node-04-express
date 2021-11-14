@@ -9,12 +9,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr class="table-light">
-      <td>1</td>
-      <td style="text-align: left;">아버지를...</td>
-      <td>홍길동</td>
-      <td>2021-01-01</td>
-    </tr>
+    <% for(let v of lists) { %>
+      <tr class="table-light">
+        <td><%= v.id %></td>
+        <td style="text-align: left;"><%= v.title %></td>
+        <td><%= v.writer %></td>
+        <td><%= v.wdate %></td>
+      </tr>
+    <% } %>
   </tbody>
 </table>
 <%- include('../inc/foot.ejs') %> 

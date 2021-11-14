@@ -19,6 +19,7 @@ Semantic
 const express = require("express");
 const createError = require("http-errors");
 const { pool } = require("../modules/mysql-init");
+const moment = require("moment");
 const router = express.Router();
 
 // list
@@ -27,7 +28,11 @@ router.get("/", async (req, res, next) => {
     const { page = 1, type } = req.query;
     if (type === "create") next();
     else {
-      res.render("board/list");
+      let sql = "SELECT * FROM board ORDER BY id DESC";
+      const [lists] = await pool.execute(sql);
+      lists.forEach((v) => (v.wdate = moment(v.createdAt).format("YYYY-MM-DD")));
+      // res.json(lists);
+      res.render("board/list", { lists });
     }
   } catch (err) {
     next(createError(err));

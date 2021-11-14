@@ -17,7 +17,7 @@ app.locals.headTitle = "Express Twitter";
 
 /***** req.body Middleware *****/
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: false }));
 
 /********* Router Init *********/
 const boardRouter = require("./routes/board-router");
