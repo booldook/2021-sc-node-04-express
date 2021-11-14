@@ -17,13 +17,6 @@
       "runtimeExecutable": "nodemon",
       "skipFiles": ["<node_internals>/**"],
       "type": "pwa-node"
-    },
-    {
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/06.middleware.js",
-      "request": "launch",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "pwa-node"
     }
   ]
 }

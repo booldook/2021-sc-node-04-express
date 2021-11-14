@@ -1,7 +1,8 @@
 module.exports = (err, req, res, next) => {
+  console.log(err.status);
   res.render("error/error", {
-    status: err.code,
+    status: err.status || 500,
     message: err.message,
-    description: null, // SQL에러
+    description: err.stack, // SQL에러
   });
 };
