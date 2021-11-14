@@ -30,10 +30,7 @@ app.get("/board", (req, res, next) => {
 });
 
 /********** Error Init *********/
-app.use((req, res, next) => {
-  next(createError(404));
-});
-
-app.use((err, req, res, next) => {
-  res.send(err);
-});
+const notFoundRouter = require("./routes/404-router");
+const errorRouter = require("./routes/500-router");
+app.use(notFoundRouter);
+app.use(errorRouter);
