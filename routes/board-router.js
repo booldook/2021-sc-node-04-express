@@ -16,6 +16,7 @@ Semantic
 /board/delete(x)
 */
 
+const path = require("path");
 const express = require("express");
 const createError = require("http-errors");
 const { pool } = require("../modules/mysql-init");
@@ -42,7 +43,18 @@ router.get("/", async (req, res, next) => {
         pager.startIdx.toString(),
         pager.listCnt.toString(),
       ]);
-      lists.forEach((v) => (v.wdate = moment(v.createdAt).format("YYYY-MM-DD")));
+      for (let v of lists) {
+        v.wdate = moment(v.createdAt).format("YYYY-MM-DD");
+        sql = "SELECT saveName FROM uploadfiles WHERE board_id=? AND type=? LIMIT 0, 1";
+        let [thumb] = await pool.execute(sql, [v.id, "I"]);
+        if (thumb.length)
+          v.thumb = path.join(
+            "/uploads/",
+            thumb[0].saveName.split("_")[0],
+            "thumb",
+            thumb[0].saveName
+          );
+      }
       res.render("board/list", { lists, pager });
     }
   } catch (err) {
