@@ -21,8 +21,7 @@ const createError = require("http-errors");
 const { pool } = require("../modules/mysql-init");
 const pagerInit = require("../modules/pager-init");
 const moment = require("moment");
-const multer = require("multer");
-const upload = multer({ dest: "./storages" });
+const uploader = require("../middlewares/multer-mw");
 
 const router = express.Router();
 
@@ -62,7 +61,7 @@ router.get("/", async (req, res, next) => {
 // save
 router.post(
   "/",
-  upload.fields([{ name: "uploadImg" }, { name: "uploadFile" }]),
+  uploader.fields([{ name: "uploadImg" }, { name: "uploadFile" }]),
   async (req, res, next) => {
     try {
       const { title, writer, content } = req.body;
