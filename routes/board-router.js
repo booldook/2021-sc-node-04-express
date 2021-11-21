@@ -47,13 +47,10 @@ router.get("/", async (req, res, next) => {
         v.wdate = moment(v.createdAt).format("YYYY-MM-DD");
         sql = "SELECT saveName FROM uploadfiles WHERE board_id=? AND type=? LIMIT 0, 1";
         let [thumb] = await pool.execute(sql, [v.id, "I"]);
-        if (thumb.length)
-          v.thumb = path.join(
-            "/uploads/",
-            thumb[0].saveName.split("_")[0],
-            "thumb",
-            thumb[0].saveName
-          );
+        if (thumb.length) {
+          let { saveName: name } = thumb[0];
+          v.thumb = path.join("/uploads/", name.split("_")[0], "thumb", name);
+        }
       }
       res.render("board/list", { lists, pager });
     }
