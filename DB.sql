@@ -54,6 +54,14 @@ SELECT COUNT(id) AS count FROM board;
 
 DELETE FROM board WHERE id = 60;
 
+-- JOIN
+SELECT distinct board.*, uploadfiles.saveName 
+FROM board
+INNER JOIN uploadfiles
+ON board.id = uploadfiles.board_id
+GROUP BY board.id
+ORDER BY board.id DESC 
+LIMIT 0, 10;
 
 
 
