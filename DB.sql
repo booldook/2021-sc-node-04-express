@@ -49,10 +49,10 @@ SELECT DISTINCT title AS t FROM board
 	ORDER BY title ASC 
 	LIMIT 0, 5;
 
+SELECT COUNT(id) AS count FROM board;
 
 
-
-
+DELETE FROM board WHERE id = 60;
 
 
 
