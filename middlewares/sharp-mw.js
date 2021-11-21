@@ -7,9 +7,11 @@ module.exports = (fieldname) => {
     if (req.files[fieldname]) {
       for (let file of req.files[fieldname]) {
         await fs.ensureDir(path.join(file.destination, "thumb"));
-        let savePath = path.join(file.destination, "thumb", file.filename);
+        let filename = path.basename(file.filename, path.extname(file.filename)) + ".jpg";
+        let savePath = path.join(file.destination, "thumb", filename);
         sharp(file.path)
           .resize(128)
+          .jpeg({ mozjpeg: true })
           .toFile(savePath)
           .then((data) => console.log(data))
           .catch((err) => next(err));

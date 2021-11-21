@@ -49,6 +49,7 @@ router.get("/", async (req, res, next) => {
         let [thumb] = await pool.execute(sql, [v.id, "I"]);
         if (thumb.length) {
           let { saveName: name } = thumb[0];
+          name = path.basename(name, path.extname(name)) + ".jpg";
           v.thumb = path.join("/uploads/", name.split("_")[0], "thumb", name);
         }
       }
