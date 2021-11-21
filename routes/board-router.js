@@ -62,7 +62,7 @@ router.post("/", async (req, res, next) => {
     const { title, writer, content } = req.body;
     let sql = "INSERT INTO board SET title=?, writer=?, content=?";
     const [rs] = await pool.execute(sql, [title, writer, content]);
-    res.json(rs);
+    res.redirect("/board");
   } catch (err) {
     next(createError(err));
   }
