@@ -21,6 +21,9 @@ const createError = require("http-errors");
 const { pool } = require("../modules/mysql-init");
 const pagerInit = require("../modules/pager-init");
 const moment = require("moment");
+const multer = require("multer");
+const upload = multer({ dest: "./storages" });
+
 const router = express.Router();
 
 // list
@@ -57,16 +60,20 @@ router.get("/", async (req, res, next) => {
 });
 
 // save
-router.post("/", async (req, res, next) => {
-  try {
-    const { title, writer, content } = req.body;
-    let sql = "INSERT INTO board SET title=?, writer=?, content=?";
-    const [rs] = await pool.execute(sql, [title, writer, content]);
-    res.redirect("/board");
-  } catch (err) {
-    next(createError(err));
+router.post(
+  "/",
+  upload.fields([{ name: "uploadImg" }, { name: "uploadFile" }]),
+  async (req, res, next) => {
+    try {
+      const { title, writer, content } = req.body;
+      let sql = "INSERT INTO board SET title=?, writer=?, content=?";
+      const [rs] = await pool.execute(sql, [title, writer, content]);
+      res.redirect("/board");
+    } catch (err) {
+      next(createError(err));
+    }
   }
-});
+);
 
 // list
 router.get("/", async (req, res, next) => {
