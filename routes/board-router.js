@@ -22,6 +22,7 @@ const { pool } = require("../modules/mysql-init");
 const pagerInit = require("../modules/pager-init");
 const moment = require("moment");
 const uploader = require("../middlewares/multer-mw");
+const resizer = require("../middlewares/sharp-mw");
 
 const router = express.Router();
 
@@ -62,6 +63,7 @@ router.get("/", async (req, res, next) => {
 router.post(
   "/",
   uploader.fields([{ name: "uploadImg" }, { name: "uploadFile" }]),
+  resizer("uploadImg"),
   async (req, res, next) => {
     try {
       let sql = "";
@@ -70,17 +72,21 @@ router.post(
       const [rs] = await pool.execute(sql, [title, writer, content]);
 
       if (req.files.uploadImg) {
-        sql =
-          "INSERT INTO uploadfiles SET saveName=?, originName=?, mimeType=?, size=?, type=?, board_id=?";
-        let [{ filename, originalname, size, mimetype }] = req.files.uploadImg;
-        await pool.execute(sql, [filename, originalname, mimetype, size, "I", rs.insertId]);
+        for (let v of req.files.uploadImg) {
+          sql =
+            "INSERT INTO uploadfiles SET saveName=?, originName=?, mimeType=?, size=?, type=?, board_id=?";
+          let { filename, originalname, size, mimetype } = v;
+          await pool.execute(sql, [filename, originalname, mimetype, size, "I", rs.insertId]);
+        }
       }
 
       if (req.files.uploadFile) {
-        sql =
-          "INSERT INTO uploadfiles SET saveName=?, originName=?, mimeType=?, size=?, type=?, board_id=?";
-        let [{ filename, originalname, size, mimetype }] = req.files.uploadFile;
-        await pool.execute(sql, [filename, originalname, mimetype, size, "F", rs.insertId]);
+        for (let v of req.files.uploadFile) {
+          sql =
+            "INSERT INTO uploadfiles SET saveName=?, originName=?, mimeType=?, size=?, type=?, board_id=?";
+          let { filename, originalname, size, mimetype } = v;
+          await pool.execute(sql, [filename, originalname, mimetype, size, "F", rs.insertId]);
+        }
       }
 
       res.redirect("/board");
