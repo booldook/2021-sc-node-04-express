@@ -28,13 +28,13 @@
   }
 </style>
 <div class="pager-wrap">
-  <a href="/" class="pager bi bi-chevron-bar-left"></a>
-  <a href="/" class="pager bi bi-chevron-double-left"></a>
-  <a href="/" class="pager bi bi-chevron-left"></a>
-  <a href="/" class="pager">1</a>
-  <a href="/" class="pager active">2</a>
-  <a href="/" class="pager">3</a>
-  <a href="/" class="pager bi bi-chevron-right"></a>
-  <a href="/" class="pager bi bi-chevron-double-right"></a>
-  <a href="/" class="pager bi bi-chevron-bar-right"></a>
+  <a href="<%= loc %>?page=1" class="pager bi bi-chevron-bar-left"></a>
+  <a href="<%= loc %>?page=<%= prevPager %>" class="pager bi bi-chevron-double-left"></a>
+  <a href="<%= loc %>?page=<%= prevPage %>" class="pager bi bi-chevron-left"></a>
+  <% for(let i=startPage; i<=endPage; i++) { %>
+  <a href="<%= loc %>?page=<%= i %>" class="pager <%= (page == i) ? 'active' : '' %>"><%= i %></a>
+  <% } %>
+  <a href="<%= loc %>?page=<%= nextPage %>" class="pager bi bi-chevron-right"></a>
+  <a href="<%= loc %>?page=<%= nextPager %>" class="pager bi bi-chevron-double-right"></a>
+  <a href="<%= loc %>?page=<%= totalPage %>" class="pager bi bi-chevron-bar-right"></a>
 </div>

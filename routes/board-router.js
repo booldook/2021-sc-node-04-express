@@ -19,6 +19,7 @@ Semantic
 const express = require("express");
 const createError = require("http-errors");
 const { pool } = require("../modules/mysql-init");
+const pagerInit = require("../modules/pager-init");
 const moment = require("moment");
 const router = express.Router();
 
@@ -28,11 +29,18 @@ router.get("/", async (req, res, next) => {
     const { page = 1, type } = req.query;
     if (type === "create") next();
     else {
-      let sql = "SELECT * FROM board ORDER BY id DESC";
-      const [lists] = await pool.execute(sql);
+      let sql = "";
+      sql = "SELECT COUNT(id) AS totalRecord FROM board";
+      const [[{ totalRecord }]] = await pool.execute(sql);
+      const pager = pagerInit(page, totalRecord);
+      pager.loc = "/board";
+      sql = "SELECT * FROM board ORDER BY id DESC LIMIT ?, ?";
+      const [lists] = await pool.execute(sql, [
+        pager.startIdx.toString(),
+        pager.listCnt.toString(),
+      ]);
       lists.forEach((v) => (v.wdate = moment(v.createdAt).format("YYYY-MM-DD")));
-      // res.json(process.env);
-      res.render("board/list", { lists });
+      res.render("board/list", { lists, pager });
     }
   } catch (err) {
     next(createError(err));
