@@ -2,12 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "command": "npm run serve",
-      "name": "Run serve",
-      "request": "launch",
-      "type": "node-terminal"
-    },
-    {
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "name": "nodemon",
@@ -17,6 +11,13 @@
       "runtimeExecutable": "nodemon",
       "skipFiles": ["<node_internals>/**"],
       "type": "pwa-node"
+    },
+
+    {
+      "command": "npm run serve",
+      "name": "npm run serve",
+      "request": "launch",
+      "type": "node-terminal"
     }
   ]
 }

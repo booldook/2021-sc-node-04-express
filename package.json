@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "serve": "nodemon app.js",
-    "test": "cross-env NODE_ENV=test node app.js",
+    "test": "cross-env NODE_ENV=test nodemon app.js",
     "deploy": "cross-env NODE_ENV=production nodemon app.js"
   },
   "repository": {
