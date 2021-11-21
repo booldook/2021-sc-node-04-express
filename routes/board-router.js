@@ -64,10 +64,40 @@ router.post(
   uploader.fields([{ name: "uploadImg" }, { name: "uploadFile" }]),
   async (req, res, next) => {
     try {
+      let sql = "";
       const { title, writer, content } = req.body;
-      let sql = "INSERT INTO board SET title=?, writer=?, content=?";
+      sql = "INSERT INTO board SET title=?, writer=?, content=?";
       const [rs] = await pool.execute(sql, [title, writer, content]);
-      res.redirect("/board");
+
+      if (req.files.uploadImg) {
+        sql =
+          "INSERT INTO uploadfiles SET saveName=?, originName=?, mimeType=?, size=?, type=?, board_id=?";
+        let [{ saveName, originName, size, mimetype }] = req.files.uploadImg;
+        const [rsImg] = await pool.execute(sql, [
+          saveName,
+          originName,
+          mimetype,
+          size,
+          "I",
+          rs.insertId,
+        ]);
+      }
+
+      if (req.files.uploadFile) {
+        sql =
+          "INSERT INTO uploadfiles SET saveName=?, originName=?, mimeType=?, size=?, type=?, board_id=?";
+        let [{ saveName, originName, size, mimetype }] = req.files.uploadImg;
+        const [rsFile] = await pool.execute(sql, [
+          saveName,
+          originName,
+          mimetype,
+          size,
+          "F",
+          rs.insertId,
+        ]);
+      }
+
+      // res.redirect("/board");
     } catch (err) {
       next(createError(err));
     }
