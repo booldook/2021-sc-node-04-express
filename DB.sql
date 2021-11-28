@@ -1,78 +1,66 @@
--- Structured QUERY Language
-CREATE TABLE `board` (
-	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`title` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`content` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
-	`writer` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id`) USING BTREE
-)
-COLLATE='utf8mb4_general_ci'
-ENGINE=INNODB;
+-- --------------------------------------------------------
+-- 호스트:                          127.0.0.1
+-- 서버 버전:                        8.0.27 - MySQL Community Server - GPL
+-- 서버 OS:                        Win64
+-- HeidiSQL 버전:                  11.3.0.6295
+-- --------------------------------------------------------
 
--- Create
-INSERT INTO board SET 
-title='테스트', writer='불뚝', content='내용입니다.';
-
-INSERT INTO board 
-(`title`, `writer`, `content`) 
-VALUES 
-('테스트2', '테스터', '내용2 입니다.');
-
--- DELETE - WHERE절이 없으면 안됨
-DELETE FROM board WHERE id='5';
-DELETE FROM board WHERE title LIKE '%아버지%';
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- UPDATE - WHERE절이 없으면 안됨
-UPDATE board SET title='형을 형이라' WHERE id='7';
+-- booldook 데이터베이스 구조 내보내기
+CREATE DATABASE IF NOT EXISTS `booldook` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `booldook`;
 
+-- 테이블 booldook.board 구조 내보내기
+CREATE TABLE IF NOT EXISTS `board` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `writer` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- SELECT - 가져오기
--- SELECT 필드명1, 필드명2 FROM 테이블명;
-SELECT `id`, `title` FROM board;
-SELECT * FROM board;
-SELECT * FROM board ORDER BY id ASC;
-SELECT * FROM board ORDER BY id DESC;
-SELECT * FROM board ORDER BY title DESC;
-SELECT * FROM board ORDER BY title ASC;
-SELECT * FROM board ORDER BY title ASC LIMIT 2, 5;
-SELECT * FROM board 
-	-- WHERE id='3' OR id='4' OR id='5' 
-	WHERE title LIKE '%아버지%'
-	ORDER BY title ASC 
-	LIMIT 0, 5;
-SELECT DISTINCT title AS t FROM board 
-	-- WHERE id='3' OR id='4' OR id='5' 
-	WHERE title LIKE '%테스트%'
-	ORDER BY title ASC 
-	LIMIT 0, 5;
+-- 내보낼 데이터가 선택되어 있지 않습니다.
 
-SELECT COUNT(id) AS count FROM board;
+-- 테이블 booldook.board4 구조 내보내기
+CREATE TABLE IF NOT EXISTS `board4` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `writer` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- 내보낼 데이터가 선택되어 있지 않습니다.
 
-DELETE FROM board WHERE id = 60;
+-- 테이블 booldook.uploadfiles 구조 내보내기
+CREATE TABLE IF NOT EXISTS `uploadfiles` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `type` enum('I','F') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `saveName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `originName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `size` int NOT NULL,
+  `mimeType` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `board_id` int unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_uploadfiles_board` (`board_id`),
+  CONSTRAINT `FK_uploadfiles_board` FOREIGN KEY (`board_id`) REFERENCES `board` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- JOIN
-SELECT distinct board.*, uploadfiles.saveName 
-FROM board
-INNER JOIN uploadfiles
-ON board.id = uploadfiles.board_id
-GROUP BY board.id
-ORDER BY board.id DESC 
-LIMIT 0, 10;
+-- 내보낼 데이터가 선택되어 있지 않습니다.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
