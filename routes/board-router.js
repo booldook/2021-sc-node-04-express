@@ -51,7 +51,6 @@ router.get("/", async (req, res, next) => {
         let [thumb] = await pool.execute(sql, [v.id, "I"]);
         if (thumb.length) {
           let { saveName: name } = thumb[0];
-          name = path.basename(name, path.extname(name)) + ".jpg";
           // v.thumb = path.join("/uploads/", name.split("_")[0], "thumb", name);
           let { thumbPath } = filePath(name);
           v.thumb = thumbPath;
@@ -110,10 +109,24 @@ router.post(
   }
 );
 
+// download
+router.get("/download/:id", async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    let sql = "SELECT * FROM uploadfiles WHERE id=?";
+    const [[list]] = await pool.execute(sql, [id]);
+    let { absolutePath } = filePath(list.saveName);
+    res.download(absolutePath, list.originName);
+  } catch (err) {
+    next(createError(err));
+  }
+});
+
 // view
 router.get("/:id", async (req, res, next) => {
   try {
     let id = req.params.id;
+    let page = req.query.page;
     let sql = "SELECT * FROM board WHERE id=?";
     // [[데이터], 필드정보]
     const [[list]] = await pool.execute(sql, [id]);
@@ -131,16 +144,7 @@ router.get("/:id", async (req, res, next) => {
       return v.type === "F";
     });
     // res.json({ list, files });
-    res.render("board/view", { list, files, images });
-  } catch (err) {
-    next(createError(err));
-  }
-});
-
-// list
-router.get("/", async (req, res, next) => {
-  try {
-    res.render("board/list");
+    res.render("board/view", { list, files, images, page });
   } catch (err) {
     next(createError(err));
   }

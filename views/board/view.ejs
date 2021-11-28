@@ -20,20 +20,19 @@
         <td style="width: 150px;">첨부이미지</td>
         <td>
           <img src="<%= v.thumb %>" alt="thumb" class="mr-3" style="max-width: 200px;">
-          <div><%= v.originName %></div>
+          <div><a href="/board/download/<%= v.id %>"><%= v.originName %></a></div>
         </td>
       </tr>
     <% } %>
     <% for(let v of files) { %>
       <tr>
         <td style="width: 150px;">첨부파일</td>
-        <td><%= v.originName %></td>
+        <td><a href="/board/download/<%= v.id %>"><%= v.originName %></a></td>
       </tr>
     <% } %>
   </tbody>
 </table>
 <div class="text-center my-3">
-  <button type="submit" class="btn btn-primary">저장</button>
-  <button type="reset" class="btn btn-danger">다시작성</button>
+  <a href="/board?page=<%= page %>" class="btn btn-primary">리스트</a>
 </div>
 <%- include('../inc/foot.ejs') %>
