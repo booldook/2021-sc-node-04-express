@@ -24,6 +24,7 @@ const pagerInit = require("../modules/pager-init");
 const moment = require("moment");
 const uploader = require("../middlewares/multer-mw");
 const resizer = require("../middlewares/sharp-mw");
+const { filePath } = require("../modules/util");
 
 const router = express.Router();
 
@@ -39,6 +40,7 @@ router.get("/", async (req, res, next) => {
       const pager = pagerInit(page, totalRecord);
       pager.loc = "/board";
       sql = "SELECT * FROM board ORDER BY id DESC LIMIT ?, ?";
+      // [[{}, {}, {}], 필드정보]
       const [lists] = await pool.execute(sql, [
         pager.startIdx.toString(),
         pager.listCnt.toString(),
@@ -50,7 +52,8 @@ router.get("/", async (req, res, next) => {
         if (thumb.length) {
           let { saveName: name } = thumb[0];
           name = path.basename(name, path.extname(name)) + ".jpg";
-          v.thumb = path.join("/uploads/", name.split("_")[0], "thumb", name);
+          let { virtualPath } = filePath(name);
+          v.thumb = virtualPath;
         }
       }
       res.render("board/list", { lists, pager });
@@ -106,10 +109,21 @@ router.post(
   }
 );
 
-// list
-router.get("/", async (req, res, next) => {
+// view
+router.get("/:id", async (req, res, next) => {
   try {
-    res.render("board/list");
+    let id = req.params.id;
+    let sql = "SELECT * FROM board WHERE id=?";
+    // [[데이터], 필드정보]
+    const [[list]] = await pool.execute(sql, [id]);
+    sql = "SELECT * FROM uploadfiles WHERE board_id=? ORDER BY type DESC";
+    const [files] = await pool.execute(sql, [list.id]);
+    data.forEach((v) => {
+      let { virtualPath } = filePath(v.saveName);
+      v.src = virtualPath;
+    });
+    res.json({ list, files });
+    // res.render("board/list");
   } catch (err) {
     next(createError(err));
   }
