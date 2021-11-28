@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs-extra");
 
 const filePath = (name) => {
   let thumbName = path.basename(name, path.extname(name)) + ".jpg";
@@ -11,4 +12,22 @@ const filePath = (name) => {
   return { absolutePath, virtualPath, thumbPath };
 };
 
-module.exports = { filePath };
+const deleteFile = async (files) => {
+  try {
+    if (typeof files === "string") {
+      let { absolutePath } = filePath(files);
+      await fs.remove(absolutePath);
+    } else if (typeof files === "array") {
+      for (let v of files) {
+        let { absolutePath } = filePath(files.saveName);
+        await fs.remove(absolutePath);
+      }
+    } else {
+      throw new Error("처리할수 없는 형식입니다.");
+    }
+  } catch (err) {
+    return err;
+  }
+};
+
+module.exports = { filePath, deleteFile };

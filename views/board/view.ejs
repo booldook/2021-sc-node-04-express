@@ -34,10 +34,13 @@
 </table>
 <div class="text-center my-3">
   <a href="/board?page=<%= page %>" class="btn btn-primary">리스트</a>
-  <a href="/board?page=<%= page %>" class="btn btn-primary">수정</a>
-  <a href="/board/deletepage=<%= page %>" class="btn btn-primary">삭제</a>
-  <form method="" action="/board">
-
+  <form method="POST" action="/board" style="float: right; margin-left: 0.5em;">
+    <input type="hidden" name="id" value="<%= list.id %>">
+    <input type="hidden" name="page" value="<%= page %>">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="button" 
+    onclick="confirm('삭제하시겠습니까?') ? this.form.submit() : null" class="btn btn-danger">삭제</button>
   </form>
+  <a href="/board?page=<%= page %>" class="btn btn-success" style="float: right;">수정</a>
 </div>
 <%- include('../inc/foot.ejs') %>

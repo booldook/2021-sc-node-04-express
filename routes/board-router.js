@@ -24,7 +24,7 @@ const pagerInit = require("../modules/pager-init");
 const moment = require("moment");
 const uploader = require("../middlewares/multer-mw");
 const resizer = require("../middlewares/sharp-mw");
-const { filePath } = require("../modules/util");
+const { filePath, deleteFile } = require("../modules/util");
 
 const router = express.Router();
 
@@ -150,10 +150,18 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// list
-router.get("/", async (req, res, next) => {
+// DELETE
+router.delete("/", async (req, res, next) => {
   try {
-    res.render("board/list");
+    let { id, page } = req.body;
+    // 실제 파일 삭제
+    let sql = "SELECT * FROM uploadfiles WHERE board_id=?";
+    const [rs] = await pool.execute(sql, [id]);
+    await deleteFile(rs);
+    // 레코드 삭제
+    sql = "DELETE FROM board WHERE id=?";
+    await pool.execute(sql, [id]);
+    res.send("삭제");
   } catch (err) {
     next(createError(err));
   }
