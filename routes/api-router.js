@@ -14,6 +14,7 @@ router.get("/remove-file/:id", async (req, res, next) => {
     await pool.execute(sql, [id]);
     res.status(200).json({ success: true, id: req.params.id });
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });

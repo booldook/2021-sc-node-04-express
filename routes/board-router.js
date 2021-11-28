@@ -86,6 +86,7 @@ router.post(
       if (id) {
         sql = "UPDATE board SET title=?, writer=?, content=? WHERE id=?";
         values = [title, writer, content, id];
+        console.log(sql, values);
       } else {
         sql = "INSERT INTO board SET title=?, writer=?, content=?";
         values = [title, writer, content];
@@ -95,9 +96,8 @@ router.post(
       if (req.files.uploadImg) {
         for (let v of req.files.uploadImg) {
           let { filename, originalname, size, mimetype } = v;
-          let fields = " SET saveName=?, originName=?, mimeType=?, size=?, type=? ";
-          sql = id ? "UPDATE uploadfiles " : "INSERT INTO uploadfiles " + fields;
-          sql += id ? " WHERE id=? " : " , board_id=? ";
+          let sql =
+            "INSERT INTO uploadfiles SET saveName=?, originName=?, mimeType=?, size=?, type=?, board_id=? ";
           let values = [filename, originalname, mimetype, size, "I"];
           values.push(id || rs.insertId);
           await pool.execute(sql, values);
@@ -107,9 +107,8 @@ router.post(
       if (req.files.uploadFile) {
         for (let v of req.files.uploadFile) {
           let { filename, originalname, size, mimetype } = v;
-          let fields = " SET saveName=?, originName=?, mimeType=?, size=?, type=? ";
-          sql = id ? "UPDATE uploadfiles " : "INSERT INTO uploadfiles " + fields;
-          sql += id ? " WHERE id=? " : " , board_id=? ";
+          let sql =
+            "INSERT INTO uploadfiles SET saveName=?, originName=?, mimeType=?, size=?, type=?, board_id=? ";
           let values = [filename, originalname, mimetype, size, "F"];
           values.push(id || rs.insertId);
           await pool.execute(sql, values);
