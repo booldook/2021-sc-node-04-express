@@ -80,30 +80,42 @@ router.post(
   resizer("uploadImg"),
   async (req, res, next) => {
     try {
-      let sql = "";
-      const { title, writer, content } = req.body;
-      sql = "INSERT INTO board SET title=?, writer=?, content=?";
-      const [rs] = await pool.execute(sql, [title, writer, content]);
+      let sql = "",
+        values = [];
+      const { id, title, writer, content, page = 1 } = req.body;
+      if (id) {
+        sql = "UPDATE board SET title=?, writer=?, content=? WHERE id=?";
+        values = [title, writer, content, id];
+      } else {
+        sql = "INSERT INTO board SET title=?, writer=?, content=?";
+        values = [title, writer, content];
+      }
+      const [rs] = await pool.execute(sql, values);
 
       if (req.files.uploadImg) {
         for (let v of req.files.uploadImg) {
-          sql =
-            "INSERT INTO uploadfiles SET saveName=?, originName=?, mimeType=?, size=?, type=?, board_id=?";
           let { filename, originalname, size, mimetype } = v;
-          await pool.execute(sql, [filename, originalname, mimetype, size, "I", rs.insertId]);
+          let fields = " SET saveName=?, originName=?, mimeType=?, size=?, type=? ";
+          sql = id ? "UPDATE uploadfiles " : "INSERT INTO uploadfiles " + fields;
+          sql += id ? " WHERE id=? " : " , board_id=? ";
+          let values = [filename, originalname, mimetype, size, "I"];
+          values.push(id || rs.insertId);
+          await pool.execute(sql, values);
         }
       }
 
       if (req.files.uploadFile) {
         for (let v of req.files.uploadFile) {
-          sql =
-            "INSERT INTO uploadfiles SET saveName=?, originName=?, mimeType=?, size=?, type=?, board_id=?";
           let { filename, originalname, size, mimetype } = v;
-          await pool.execute(sql, [filename, originalname, mimetype, size, "F", rs.insertId]);
+          let fields = " SET saveName=?, originName=?, mimeType=?, size=?, type=? ";
+          sql = id ? "UPDATE uploadfiles " : "INSERT INTO uploadfiles " + fields;
+          sql += id ? " WHERE id=? " : " , board_id=? ";
+          let values = [filename, originalname, mimetype, size, "F"];
+          values.push(id || rs.insertId);
+          await pool.execute(sql, values);
         }
       }
-
-      res.redirect("/board");
+      res.redirect("/board?page=" + page);
     } catch (err) {
       next(createError(err));
     }
