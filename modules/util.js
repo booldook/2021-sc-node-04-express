@@ -21,11 +21,13 @@ const deleteFile = async (files) => {
     let { absolutePath, thumbAbsolutePath } = filePath(files);
     await fs.remove(absolutePath);
     await fs.remove(thumbAbsolutePath);
+    return true;
   } else if (Array.isArray(files)) {
     for (let v of files) {
       let { absolutePath, thumbAbsolutePath } = filePath(v.saveName);
       await fs.remove(absolutePath);
       await fs.remove(thumbAbsolutePath);
+      return true;
     }
   } else {
     throw new Error("처리할수 없는 형식입니다.");

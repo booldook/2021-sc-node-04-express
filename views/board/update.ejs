@@ -63,10 +63,13 @@
 <script>
   $(".bt-remove").on("click", function() {
     if(confirm("삭제하시겠습니까?")) {
+      $(this) //?
       var id = $(this).data("id");
-      $.get("/api/delete-file/"+id)
+      $.get("/api/remove-file/"+id)
         .then(function(result) {
-          console.log(result);
+          if(result.success) {
+            $(this) //?
+          }
         })
         .catch(function(error) {
           console.log(error)
