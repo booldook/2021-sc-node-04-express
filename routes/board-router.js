@@ -52,8 +52,9 @@ router.get("/", async (req, res, next) => {
         if (thumb.length) {
           let { saveName: name } = thumb[0];
           name = path.basename(name, path.extname(name)) + ".jpg";
-          let { virtualPath } = filePath(name);
-          v.thumb = virtualPath;
+          // v.thumb = path.join("/uploads/", name.split("_")[0], "thumb", name);
+          let { thumbPath } = filePath(name);
+          v.thumb = thumbPath;
         }
       }
       res.render("board/list", { lists, pager });
@@ -116,14 +117,21 @@ router.get("/:id", async (req, res, next) => {
     let sql = "SELECT * FROM board WHERE id=?";
     // [[데이터], 필드정보]
     const [[list]] = await pool.execute(sql, [id]);
-    sql = "SELECT * FROM uploadfiles WHERE board_id=? ORDER BY type DESC";
-    const [files] = await pool.execute(sql, [list.id]);
-    data.forEach((v) => {
-      let { virtualPath } = filePath(v.saveName);
-      v.src = virtualPath;
+    list.updatedAt = moment(list.updatedAt).format("YYYY-MM-DD HH:mm:ss");
+    sql = "SELECT * FROM uploadfiles WHERE board_id=? ORDER BY type ASC";
+    const [data] = await pool.execute(sql, [list.id]);
+    const images = data.filter((v) => {
+      if (v.type === "I") {
+        let { virtualPath } = filePath(v.saveName);
+        v.thumb = virtualPath;
+        return true;
+      } else return false;
     });
-    res.json({ list, files });
-    // res.render("board/list");
+    const files = data.filter((v) => {
+      return v.type === "F";
+    });
+    // res.json({ list, files });
+    res.render("board/view", { list, files, images });
   } catch (err) {
     next(createError(err));
   }
