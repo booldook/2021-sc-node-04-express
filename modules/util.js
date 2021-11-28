@@ -19,7 +19,7 @@ const filePath = (name) => {
 const deleteFile = (files) => {
   if (typeof files === "string") {
     let { absolutePath, thumbAbsolutePath } = filePath(files);
-    console.log(absolutePath, thumbAbsolutePath);
+    // console.log(absolutePath, thumbAbsolutePath);
     fs.removeSync(absolutePath);
     fs.removeSync(thumbAbsolutePath);
     return true;

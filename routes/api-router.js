@@ -9,7 +9,8 @@ router.get("/remove-file/:id", async (req, res, next) => {
     let id = req.params.id;
     let sql = "SELECT saveName FROM uploadfiles WHERE id=?";
     const [[{ saveName }]] = await pool.execute(sql, [id]);
-    deleteFile(saveName);
+    const result = await deleteFile(saveName);
+    console.log(result);
     sql = "DELETE FROM uploadfiles WHERE id=?";
     await pool.execute(sql, [id]);
     res.status(200).json({ success: true, id: req.params.id });
