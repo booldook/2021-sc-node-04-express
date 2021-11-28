@@ -159,9 +159,9 @@ router.delete("/", async (req, res, next) => {
     const [rs] = await pool.execute(sql, [id]);
     await deleteFile(rs);
     // 레코드 삭제
-    sql = "DELETE FROM board WHERE id=?";
-    await pool.execute(sql, [id]);
-    res.send("삭제");
+    // sql = "DELETE FROM board WHERE id=?";
+    // await pool.execute(sql, [id]);
+    // res.send("삭제");
   } catch (err) {
     next(createError(err));
   }
