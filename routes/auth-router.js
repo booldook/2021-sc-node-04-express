@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const createError = require("http-errors");
+const bcrypt = require("bcrypt");
 const { pool } = require("../modules/mysql-init");
 const joinValidator = require("../middlewares/joinValidator");
 
@@ -27,7 +28,13 @@ router.get("/join", (req, res, next) => {
 // 회원가입 처리
 router.post("/join", joinValidator, async (req, res, next) => {
   try {
-    res.send("저장");
+    let { userid, userpw, username, email } = req.body;
+    let { BCRYPT_SALT: salt, BCRYPT_ROUND: round } = process.env;
+    let password = await bcrypt.hash(userpw + salt, Number(round));
+    let sql = "INSERT INTO user SET userid=?, userpw=?, username=?, email=?";
+    let values = [userid, password, username, email];
+    let rs = await pool.execute(sql, values);
+    res.json(rs);
   } catch (err) {
     next(createError(err));
   }
