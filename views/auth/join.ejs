@@ -44,5 +44,53 @@ h3.title {max-width: 500px; margin: 0 auto 32px auto;}
     <button type="reset" class="btn btn-danger">다시작성</button>
   </div>
 </form>
-<script src="/js/validate.min.js"></script>
+<script src="/js/validator.min.js"></script>
+<script>
+  document.joinForm.addEventListener("submit", function() {
+    event.preventDefault();
+    var options = {min: 6, max: 24};
+    var userid = this.userid.value.trim();
+    var userpw = this.userpw.value.trim();
+    var userpw2 = this.userpw2.value.trim();
+    var username = this.username.value.trim();
+    var email = this.email.value.trim();
+    var validUserid = validator.isLength(userid, options);
+    var validUserpw = validator.isLength(userpw, options);
+    var validUserpw2 = validator.isLength(userpw2, options);
+    var validPassword = userpw === userpw2;
+    var valideUsername = validator.isLength(username, {min:2, max: 255});
+    var validEmail = validator.isEmail(email);
+    if(!validUserid) {
+      alert("아이디는 6 ~ 24자 입니다.");
+      this.userid.focus();
+      return false;
+    }
+    if(!validUserpw) {
+      alert("패스워드는 6 ~ 24자 입니다.");
+      this.userpw.focus();
+      return false;
+    }
+    if(!validUserpw2) {
+      alert("패스워드는 6 ~ 24자 입니다.");
+      this.userpw2.focus();
+      return false;
+    }
+    if(!validPassword) {
+      alert("패스워드가 일치하지 않습니다.");
+      this.userpw.focus();
+      return false;
+    }
+    if(!validUsername) {
+      alert("이름은 2자 이상 입니다.");
+      this.username.focus();
+      return false;
+    }
+    if(!validEmail) {
+      alert("이메일 형식이 올바르지 않습니다.");
+      this.email.focus();
+      return false;
+    }
+    this.submit();
+  })
+</script>
 <%- include('../inc/foot.ejs') %> 
