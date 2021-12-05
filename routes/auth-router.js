@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const createError = require("http-errors");
+const bcrypt = require("bcrypt");
 const { pool } = require("../modules/mysql-init");
 const joinValidator = require("../middlewares/joinValidator");
 const loginValidator = require("../middlewares/loginValidator");
+const { alert } = require("../modules/util");
 
 // 로그인 창 보여주기
 router.get("/login", (req, res, next) => {
@@ -15,7 +17,13 @@ router.post("/login", loginValidator, async (req, res, next) => {
   try {
     let { userid, userpw } = req.body;
     let { BCRYPT_SALT: salt, BCRYPT_ROUND: round } = process.env;
-    res.send("<script>alert('로그인 되었습니다.'); location.href='/';</script>");
+    let sql = "SELECT userpw FROM user WHERE userid=?";
+    let [rs] = await pool.execute(sql, [userid]);
+    if (rs.length && rs[0].userpw) {
+      let compare = await bcrypt.compare(userpw + salt, rs[0].userpw);
+      if (compare) res.send(alert("로그인 되었습니다."));
+      else res.send(alert("아이디와 패스워드를 확인하세요", "/auth/login"));
+    }
   } catch (err) {
     next(createError(err));
   }

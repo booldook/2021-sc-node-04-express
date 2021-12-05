@@ -21,7 +21,7 @@ module.exports = async (req, res, next) => {
       validUsername &&
       validEmail
     ) {
-      req.userpw = await bcrypt.hash(userpw + salt, Number(round));
+      req.body.userpw = await bcrypt.hash(userpw + salt, Number(round));
       next();
     } else {
       next(createError(400));

@@ -1,7 +1,16 @@
 const path = require("path");
 const fs = require("fs-extra");
+const mdl = {};
 
-const filePath = (name) => {
+mdl.alert = (msg, location = "/") => {
+  return `
+  <script>
+    alert('${msg}');
+    location.href = '${location}';
+  </script>`;
+};
+
+mdl.filePath = (name) => {
   let thumbName = path.basename(name, path.extname(name)) + ".jpg";
   const virtualPath = path.join("/uploads/", name.split("_")[0], name);
   const thumbPath = path.join("/uploads/", name.split("_")[0], "thumb", thumbName);
@@ -16,7 +25,7 @@ const filePath = (name) => {
   return { absolutePath, virtualPath, thumbPath, thumbAbsolutePath };
 };
 
-const deleteFile = (files) => {
+mdl.deleteFile = (files) => {
   if (typeof files === "string") {
     let { absolutePath, thumbAbsolutePath } = filePath(files);
     // console.log(absolutePath, thumbAbsolutePath);
@@ -35,4 +44,4 @@ const deleteFile = (files) => {
   }
 };
 
-module.exports = { filePath, deleteFile };
+module.exports = mdl;
