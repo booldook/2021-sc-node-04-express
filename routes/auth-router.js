@@ -1,18 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const createError = require("http-errors");
-const bcrypt = require("bcrypt");
 const { pool } = require("../modules/mysql-init");
 const joinValidator = require("../middlewares/joinValidator");
+const loginValidator = require("../middlewares/loginValidator");
 
 // 로그인 창 보여주기
 router.get("/login", (req, res, next) => {
-  res.send("<h1>LOGIN FROM</h1>");
+  res.render("auth/login");
 });
 
 // 로그인 처리
-router.get("/login", (req, res, next) => {
-  res.send("<h1>로그인 처리</h1>");
+router.post("/login", loginValidator, async (req, res, next) => {
+  try {
+    let { userid, userpw } = req.body;
+    let { BCRYPT_SALT: salt, BCRYPT_ROUND: round } = process.env;
+    res.send("<script>alert('로그인 되었습니다.'); location.href='/';</script>");
+  } catch (err) {
+    next(createError(err));
+  }
 });
 
 // 로그아웃 처리
@@ -29,12 +35,10 @@ router.get("/join", (req, res, next) => {
 router.post("/join", joinValidator, async (req, res, next) => {
   try {
     let { userid, userpw, username, email } = req.body;
-    let { BCRYPT_SALT: salt, BCRYPT_ROUND: round } = process.env;
-    let password = await bcrypt.hash(userpw + salt, Number(round));
     let sql = "INSERT INTO user SET userid=?, userpw=?, username=?, email=?";
-    let values = [userid, password, username, email];
+    let values = [userid, userpw, username, email];
     let rs = await pool.execute(sql, values);
-    res.json(rs);
+    res.redirect("/");
   } catch (err) {
     next(createError(err));
   }
