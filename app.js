@@ -4,6 +4,7 @@ const express = require("express");
 const logger = require("./middlewares/logger-mw");
 const method = require("./middlewares/method-mw");
 const session = require("./middlewares/session-mw");
+const local = require("./middlewares/local-mw");
 const app = express();
 
 /********* Server Init *********/
@@ -20,6 +21,7 @@ app.locals.headTitle = "Express Twitter";
 
 /***** session Middleware ******/
 app.use(session(app));
+app.use(local);
 
 /***** req.body Middleware *****/
 app.use(express.json());
