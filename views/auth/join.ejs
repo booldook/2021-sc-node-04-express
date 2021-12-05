@@ -58,7 +58,7 @@ h3.title {max-width: 500px; margin: 0 auto 32px auto;}
     var validUserpw = validator.isLength(userpw, options);
     var validUserpw2 = validator.isLength(userpw2, options);
     var validPassword = userpw === userpw2;
-    var valideUsername = validator.isLength(username, {min:2, max: 255});
+    var validUsername = validator.isLength(username, {min:2, max: 255});
     var validEmail = validator.isEmail(email);
     if(!validUserid) {
       alert("아이디는 6 ~ 24자 입니다.");
