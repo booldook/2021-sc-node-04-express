@@ -18,7 +18,7 @@ router.get("/logout", (req, res) => {
 
 // 회원가입창 보여주기
 router.get("/join", (req, res) => {
-  res.send("<h1>JOIN FROM</h1>");
+  res.render("auth/join");
 });
 
 // 회원가입 처리

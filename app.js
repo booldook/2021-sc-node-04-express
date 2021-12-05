@@ -29,9 +29,11 @@ app.use("/uploads", express.static("./storages"));
 /********* Router Init *********/
 const apiRouter = require("./routes/api-router");
 const boardRouter = require("./routes/board-router");
+const authRouter = require("./routes/auth-router");
 
 app.use("/api", apiRouter);
 app.use("/board", boardRouter);
+app.use("/auth", authRouter);
 
 /********** Error Init *********/
 const notFoundRouter = require("./routes/404-router");
