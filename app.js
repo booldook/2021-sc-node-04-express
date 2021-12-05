@@ -3,9 +3,8 @@ require("./modules/dotenv-init")();
 const express = require("express");
 const logger = require("./middlewares/logger-mw");
 const method = require("./middlewares/method-mw");
+const session = require("./middlewares/session-mw");
 const app = express();
-
-const session = require("express-session");
 
 /********* Server Init *********/
 require("./modules/server-init")(app, process.env.PORT);
@@ -19,26 +18,13 @@ app.set("views", "./views");
 app.locals.pretty = true;
 app.locals.headTitle = "Express Twitter";
 
-/***** req.body Middleware *****/
+/***** session Middleware ******/
+app.use(session(app));
 
+/***** req.body Middleware *****/
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(method);
-
-app.set("trust proxy", 1);
-app.use(
-  session({
-    secret: process.env.SESSION_SALT,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: process.env.SESSION_SECURE == true, httpOnly: true },
-  })
-);
-
-app.use((req, res, next) => {
-  console.log(req.session);
-  next();
-});
 
 /********* Static Init *********/
 app.use("/", express.static("./public"));
