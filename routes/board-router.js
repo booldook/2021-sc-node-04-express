@@ -78,6 +78,7 @@ router.post(
   "/",
   isUser,
   uploader.fields([{ name: "uploadImg" }, { name: "uploadFile" }]),
+  isMine,
   resizer("uploadImg"),
   async (req, res, next) => {
     try {
@@ -85,9 +86,8 @@ router.post(
         values = [];
       const { id, title, writer, content, page = 1 } = req.body;
       if (id) {
-        sql = "UPDATE board SET title=?, writer=?, content=? WHERE id=?";
-        values = [title, writer, content, id];
-        console.log(sql, values);
+        sql = "UPDATE board SET title=?, writer=?, content=? WHERE id=? and user_id=?";
+        values = [title, writer, content, id, req.session.user.id];
       } else {
         sql = "INSERT INTO board SET title=?, writer=?, content=?, user_id=?";
         values = [title, writer, content, req.session.user.id];
@@ -117,6 +117,7 @@ router.post(
       }
       res.redirect("/board?page=" + page);
     } catch (err) {
+      console.log(err);
       next(createError(err));
     }
   }
@@ -172,8 +173,8 @@ router.delete("/", isUser, isMine, async (req, res, next) => {
     const [rs] = await pool.execute(sql, [id]);
     await deleteFile(rs);
     // 레코드 삭제
-    sql = "DELETE FROM board WHERE id=?";
-    await pool.execute(sql, [id]);
+    sql = "DELETE FROM board WHERE id=? AND user_id=?";
+    await pool.execute(sql, [id, req.session.user.id]);
     res.redirect("/board?page" + page);
   } catch (err) {
     next(createError(err));

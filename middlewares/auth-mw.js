@@ -14,10 +14,13 @@ module.exports.isGuest = (req, res, next) => {
 
 module.exports.isMine = async (req, res, next) => {
   try {
-    let sql = "SELECT COUNT(id) as count FROM board WHERE user_id=? AND id=?";
-    let [[{ count }]] = await pool.execute(sql, [req.session.user.id, req.body.id]);
-    if (count) next();
-    else res.send(alert("정상적인 접근이 아닙니다.", "/"));
+    if (req.body.mode === "update" || req.body.mode === "delete") {
+      let sql = "SELECT COUNT(id) as count FROM board WHERE user_id=? AND id=?";
+      let [[{ count }]] = await pool.execute(sql, [req.session.user.id, req.body.id]);
+      console.log(count);
+      if (count) next();
+      else res.send(alert("정상적인 접근이 아닙니다.", "/"));
+    } else next();
   } catch (err) {
     next(createError(err));
   }
