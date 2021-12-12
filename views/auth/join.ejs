@@ -2,15 +2,20 @@
 <style>
 h3.title {max-width: 500px; margin: 0 auto 32px auto;}
 .join-form {max-width: 500px; margin: auto; border-top: 1px solid #dee2e6;}
+.allow-userid {font-size: 0.875em;}
+.allow-userid.blue {color: blue;}
+.allow-userid.red {color: red;}
 </style> 
 <form name="joinForm" action="/auth/join" method="post">
+  <input type="hidden" name="allowUserId" value="false">
   <h3 class="title">회원가입</h3>
   <table class="table join-form">
     <tbody>
       <tr>
         <td class="title">아이디</td>
         <td class="content">
-          <input type="text" name="userid" placeholder="아이디" class="form-control">
+          <input type="text" name="userid" placeholder="아이디" class="form-control" onblur="onBlurUserid(this);">
+          <div class="allow-userid red"></div>
         </td>
       </tr>
       <tr>
@@ -46,9 +51,28 @@ h3.title {max-width: 500px; margin: 0 auto 32px auto;}
 </form>
 <script src="/js/validator.min.js"></script>
 <script>
+  function onBlurUserid(el) {
+    var userid = el.value;
+    $.get('/api/userid?userid='+userid).then(function(res){
+      if(res.allow) {
+        $(el.form).find('.allow-userid').removeClass('red').addClass('blue');
+        $(el.form).find('.allow-userid').text('사용할 수 있습니다.');
+        $(el.form).find('input[name="allowUserId"]').val('true');
+      }
+      else {
+        $(el.form).find('.allow-userid').removeClass('blue').addClass('red');
+        $(el.form).find('.allow-userid').text('사용할 수 없습니다.');
+        $(el.form).find('input[name="allowUserId"]').val('false');
+      }
+    }).catch(function(err){
+      console.log(err);
+    })
+  }
+
   document.joinForm.addEventListener("submit", function() {
     event.preventDefault();
     var options = {min: 6, max: 24};
+    var allowUserId = this.allowUserId.value;
     var userid = this.userid.value.trim();
     var userpw = this.userpw.value.trim();
     var userpw2 = this.userpw2.value.trim();
@@ -62,6 +86,11 @@ h3.title {max-width: 500px; margin: 0 auto 32px auto;}
     var validEmail = validator.isEmail(email);
     if(!validUserid) {
       alert("아이디는 6 ~ 24자 입니다.");
+      this.userid.focus();
+      return false;
+    }
+    if(allowUserId == 'false') {
+      alert("아이디 중복확인을 진행하세요.")
       this.userid.focus();
       return false;
     }
