@@ -25,7 +25,7 @@ const moment = require("moment");
 const uploader = require("../middlewares/multer-mw");
 const resizer = require("../middlewares/sharp-mw");
 const { filePath, deleteFile } = require("../modules/util");
-const { isUser } = require("../middlewares/auth-mw");
+const { isUser, isMine } = require("../middlewares/auth-mw");
 
 const router = express.Router();
 
@@ -164,7 +164,7 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // DELETE
-router.delete("/", isUser, async (req, res, next) => {
+router.delete("/", isUser, isMine, async (req, res, next) => {
   try {
     let { id, page } = req.body;
     // 실제 파일 삭제

@@ -1,15 +1,15 @@
 const path = require("path");
 const fs = require("fs-extra");
 
-module.exports.alert = (msg, location = "/") => {
+function alert(msg, location = "/") {
   return `
   <script>
     alert('${msg}');
     location.href = '${location}';
   </script>`;
-};
+}
 
-module.exports.filePath = (name) => {
+function filePath(name) {
   let thumbName = path.basename(name, path.extname(name)) + ".jpg";
   const virtualPath = path.join("/uploads/", name.split("_")[0], name);
   const thumbPath = path.join("/uploads/", name.split("_")[0], "thumb", thumbName);
@@ -22,9 +22,9 @@ module.exports.filePath = (name) => {
     thumbName
   );
   return { absolutePath, virtualPath, thumbPath, thumbAbsolutePath };
-};
+}
 
-module.exports.deleteFile = (files) => {
+function deleteFile(files) {
   if (typeof files === "string") {
     let { absolutePath, thumbAbsolutePath } = filePath(files);
     // console.log(absolutePath, thumbAbsolutePath);
@@ -41,4 +41,6 @@ module.exports.deleteFile = (files) => {
   } else {
     throw new Error("처리할수 없는 형식입니다.");
   }
-};
+}
+
+module.exports = { alert, filePath, deleteFile };
