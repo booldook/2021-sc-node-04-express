@@ -20,4 +20,16 @@ router.get("/remove-file/:id", async (req, res, next) => {
   }
 });
 
+router.get("/userid", async (req, res, next) => {
+  try {
+    let sql = "SELECT COUNT(id) as count FROM user WHERE userid=?";
+    let [[{ count }]] = await pool.execute(sql, [req.query.userid]);
+    if (count) res.status(200).json({ allow: false });
+    else res.status(200).json({ allow: true });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
