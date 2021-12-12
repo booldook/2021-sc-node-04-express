@@ -89,8 +89,8 @@ router.post(
         values = [title, writer, content, id];
         console.log(sql, values);
       } else {
-        sql = "INSERT INTO board SET title=?, writer=?, content=?";
-        values = [title, writer, content];
+        sql = "INSERT INTO board SET title=?, writer=?, content=?, user_id=?";
+        values = [title, writer, content, req.session.user.id];
       }
       const [rs] = await pool.execute(sql, values);
 
